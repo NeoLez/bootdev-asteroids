@@ -3,6 +3,7 @@ import random
 from constants import *
 from player import *
 from asteroid import *
+from shot import *
 
 class AsteroidField(pygame.sprite.Sprite):
     edges = [
@@ -64,10 +65,12 @@ def main():
     updateable = pygame.sprite.Group()
     drawable = pygame.sprite.Group()
     asteroids = pygame.sprite.Group()
+    shots = pygame.sprite.Group()
 
     Player.containers = (updateable, drawable)
     Asteroid.containers = (asteroids, updateable, drawable)
     AsteroidField.containers = (updateable)
+    Shot.containers = (updateable, shots, drawable)
 
     asteroid_field = AsteroidField()
     player = Player(SCREEN_WIDTH/2, SCREEN_HEIGHT/2)
@@ -89,6 +92,10 @@ def main():
             if asteroid.is_colliding(player):
                 print("Game Over!")
                 return
+            for shot in shots:
+                if asteroid.is_colliding(shot):
+                    shot.kill()
+                    asteroid.split()
 
         screen.fill((1,1,1))
 
